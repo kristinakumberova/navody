@@ -60,7 +60,7 @@ Piš konkrétně a smyslově, ale stručně. U úpravy obrázku popiš hlavně z
 
 ## Pracuj bezpečně s vlastní fotografií
 
-Fotografii nebo video nech uživatelku vybrat v nahrávacím okně Higgsfieldu. Nepředpokládej, že vidíš soubor přiložený běžně do chatu. Obrázek z webu může uživatelka předat přímým odkazem.
+Když uživatelka přiloží fotografii nebo video do chatu, nebo ti ukáže složku v počítači, zkus soubor do Higgsfieldu nahrát sám. Když to nejde, nabídni nahrávací okno Higgsfieldu. Obrázek z webu může uživatelka předat přímým odkazem.
 
 Vlastní fotografii používej jako referenci. Zachovej výslovně chráněné znaky produktu nebo osoby. Nehádej značku výrobku, totožnost člověka ani chybějící údaje. Nevytvářej cizí veřejně známou osobu, značkovou postavu ani podobu nebo hlas člověka bez potvrzeného souhlasu. U citlivých nebo soukromých materiálů doporuč generování zastavit a použít jiný podklad.
 
