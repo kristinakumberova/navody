@@ -125,7 +125,7 @@ main li { margin:.38rem 0; padding-left:.18rem; }
 .footer-main { padding-block:2rem; display:grid; gap:1.5rem; }
 .signature { display:flex; align-items:flex-start; gap:1rem; }
 .footer-logo { flex:0 0 auto; width:56px; height:56px; color:var(--white); }
-.site-footer h2 { margin:0 0 .35rem; color:var(--white); font:600 1.6rem/1.15 var(--f-display); }
+.site-footer h2 { margin:0 0 .35rem; color:var(--white); font:600 1.6rem/1.15 var(--f-display); overflow-wrap:normal; word-break:normal; hyphens:manual; }
 .descriptor { margin:0; font-size:1rem; }
 .service-area, .footer-meta, .qr-card figcaption { margin:.35rem 0 0; color:var(--white); font-size:.88rem; line-height:1.4; opacity:.92; }
 .contact-details { display:flex; flex-direction:column; align-items:flex-start; gap:.2rem; font-style:normal; margin:0; }
@@ -155,7 +155,12 @@ main li { margin:.38rem 0; padding-left:.18rem; }
   .tok .sipka::before { content:attr(data-desktop); }
   .znalost { grid-template-columns:1fr auto; align-items:center; padding:1.4rem; }
   .dva-sloupce { grid-template-columns:1fr 1fr; align-items:stretch; }
-  .footer-main { grid-template-columns:minmax(0,1.4fr) minmax(200px,.8fr) minmax(240px,.8fr); align-items:start; }
+  .footer-main { grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:start; }
+  .qr-card { grid-column:1 / -1; }
+}
+@media (min-width:900px) {
+  .footer-main { grid-template-columns:minmax(0,1.4fr) minmax(200px,.8fr) minmax(240px,.8fr); }
+  .qr-card { grid-column:auto; }
 }
 </style>
 
