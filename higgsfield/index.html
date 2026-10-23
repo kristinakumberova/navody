@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- poznamky: ne, duvod: verejny web -->
+<title>Fotky a videa přes AI s Higgsfieldem</title>
+<style>
+:root {
+  --navy:#0C2340; --raspberry:#C2185B; --paper:#FAFBFD;
+  --mist:#EAEFF6; --slate:#43526E; --white:#FFFFFF;
+  --line:#DBE2EC;
+  --f-display:"Source Serif 4", Georgia, serif; --f-body:"Source Sans 3", Segoe UI, Arial, sans-serif;
+}
+* { box-sizing:border-box; }
+html { color-scheme:light; }
+body {
+  background:var(--paper); color:var(--navy); margin:0;
+  font:400 16px/1.65 var(--f-body); font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:60rem; margin:0 auto; padding:3rem 1.5rem 6rem;
+  display:flex; flex-direction:column; gap:2.5rem; }
+h1 { font:600 2.3rem/1.15 var(--f-display); margin:0; letter-spacing:-.015em;
+  text-wrap:balance; }
+h2 { font:600 1.35rem/1.25 var(--f-display); margin:0 0 .8rem; }
+.eyebrow { font:600 .78rem/1 var(--f-body); letter-spacing:.12em;
+  text-transform:uppercase; color:var(--slate); }
+a { color:var(--raspberry); text-decoration-thickness:1px;
+  text-underline-offset:2px; }
+a:focus-visible, button:focus-visible, textarea:focus-visible {
+  outline:2px solid var(--raspberry); outline-offset:2px; }
+.karta { background:var(--white); border:1px solid var(--line); border-radius:8px; }
+.mist { background:var(--mist); }
+code { font:.87em ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--mist); padding:.1em .38em; border-radius:3px; color:var(--navy); }
+table { border-collapse:collapse; width:100%; }
+th, td { text-align:left; padding:.65rem .85rem; border-bottom:1px solid var(--line); }
+th { font:600 .8rem/1 var(--f-body); letter-spacing:.06em; text-transform:uppercase;
+  color:var(--slate); }
+.scroll { overflow-x:auto; }
+button { font:600 .9rem var(--f-body); background:var(--raspberry); color:var(--white);
+  border:0; border-radius:6px; padding:.55rem 1.1rem; cursor:pointer; }
+button:hover { filter:brightness(1.08); }
+button.tichy { background:transparent; color:var(--raspberry);
+  border:1px solid var(--line); }
+textarea { font:400 .92rem/1.5 var(--f-body); color:var(--navy); background:var(--paper);
+  border:1px solid var(--line); border-radius:6px; padding:.55rem .7rem; width:100%;
+  resize:vertical; min-height:2.6rem; }
+textarea::placeholder { color:var(--slate); opacity:.65; }
+footer { border-top:1px solid var(--line); padding-top:1.2rem; color:var(--slate);
+  font-size:.87rem; }
+@media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+
+.navlista { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap;
+  padding-bottom:.9rem; border-bottom:1px solid var(--line); }
+.zpet { display:inline-flex; align-items:center; gap:.4rem; text-decoration:none;
+  font:600 .87rem var(--f-body); color:var(--raspberry); }
+.zpet:hover { text-decoration:underline; }
+.zpet .sipka { font-size:1.05em; line-height:1; }
+.navlista .kde { color:var(--slate); font-size:.85rem; }
+.poznamky { border:1px solid var(--line); border-radius:8px; background:var(--white);
+  padding:1.1rem 1.2rem; display:flex; flex-direction:column; gap:.6rem; }
+.poznamky h2 { margin:0; }
+.poznamky .popis { color:var(--slate); font-size:.88rem; margin:0; }
+.poznamky .radek { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+.poznamky .hlaseni { font-size:.85rem; color:var(--slate); }
+.poznamky .hlaseni.varovny { color:var(--raspberry); font-weight:600; }
+</style>
+<meta name="description" content="Propojte Claude nebo ChatGPT s Higgsfieldem a vytvořte video z vlastní fotografie krok za krokem.">
+<link rel="canonical" href="https://kristinakumberova.github.io/navody/higgsfield/">
+<meta property="og:url" content="https://kristinakumberova.github.io/navody/higgsfield/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:title" content="Fotky a videa přes AI s Higgsfieldem">
+<meta property="og:description" content="Propojte Claude nebo ChatGPT s Higgsfieldem a vytvořte video z vlastní fotografie krok za krokem.">
+
+<style>
+body { overflow-wrap:anywhere; }
+.wrap { max-width:54rem; padding:1.4rem 1rem 4rem; gap:1.4rem; }
+.hero { padding:1.4rem; display:grid; gap:1rem; }
+.hero h1 { margin:0; }
+.hero p { margin:0; color:var(--slate); font-size:1.05rem; }
+.tok { display:grid; grid-template-columns:1fr; gap:.65rem; margin-top:.25rem; }
+.tok span { display:block; text-align:center; padding:.8rem .6rem; background:var(--mist); border:1px solid var(--line); border-radius:4px; font-weight:600; }
+.tok .sipka { background:transparent; border:0; color:var(--raspberry); padding:0; }
+.tok .sipka::before { content:attr(data-mobile); }
+.stahnout { display:inline-flex; justify-content:center; align-items:center; min-height:3.2rem; padding:.8rem 1.1rem; border-radius:4px; background:var(--raspberry); color:var(--white); font-weight:700; text-decoration:none; text-align:center; }
+.stahnout:hover { filter:brightness(1.08); }
+.znalost { padding:1.2rem; display:grid; gap:.7rem; }
+.znalost h2, .znalost p { margin:0; }
+main { display:grid; gap:1.8rem; }
+main > h2 { margin:1rem 0 .7rem; }
+.krok, .doplnek { padding:1.2rem; }
+.krok h2 { display:flex; align-items:center; gap:.75rem; margin:0 0 .9rem; }
+.cislo-kroku { display:inline-flex; flex:0 0 2.25rem; width:2.25rem; height:2.25rem; align-items:center; justify-content:center; border-radius:50%; background:var(--raspberry); color:var(--white); font:700 1.05rem/1 var(--f-body); }
+.krok h3 { font:600 1.06rem/1.35 var(--f-display); margin:1.15rem 0 .4rem; padding-top:1rem; border-top:1px solid var(--line); }
+.doplnek h2 { margin:0 0 .8rem; }
+main p { margin:.45rem 0; }
+main ol, main ul { margin:.5rem 0 1rem; padding-left:1.35rem; }
+main li { margin:.38rem 0; padding-left:.18rem; }
+.promptbox { padding:1rem; display:grid; gap:.75rem; }
+.promptbox pre { margin:0; white-space:pre-wrap; font:400 .95rem/1.55 var(--f-body); }
+.promptbox pre code { background:transparent; padding:0; font:inherit; }
+.promptbox button { width:max-content; border-radius:4px; }
+.kopie-stav { color:var(--slate); font-size:.88rem; min-height:1.3em; }
+.tabulka { width:100%; }
+footer a { color:inherit; }
+@media (max-width:600px) {
+  h1 { font-size:2rem; }
+  .tabulka table, .tabulka thead, .tabulka tbody, .tabulka tr, .tabulka th, .tabulka td { display:block; width:100%; }
+  .tabulka thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  .tabulka tr { border:1px solid var(--line); border-radius:4px; margin-bottom:.75rem; background:var(--white); }
+  .tabulka td { border:0; padding:.65rem .75rem; }
+  .tabulka td::before { content:attr(data-label); display:block; margin-bottom:.2rem; color:var(--slate); font-size:.72rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+}
+@media (min-width:680px) {
+  .wrap { padding:2.5rem 1.5rem 5rem; }
+  .hero { padding:2rem; }
+  .tok { grid-template-columns:1fr auto 1fr auto 1fr; align-items:center; }
+  .tok .sipka::before { content:attr(data-desktop); }
+  .znalost { grid-template-columns:1fr auto; align-items:center; padding:1.4rem; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="hero karta">
+    <span class="eyebrow">Praktický návod</span>
+    <h1>Fotky a videa přes AI s Higgsfieldem</h1>
+    <p>Tento návod vám pomůže propojit Higgsfield s Claude nebo ChatGPT a vytvořit první video z vlastní fotografie.</p>
+    <div class="tok" aria-label="Vaše AI je propojená s Higgsfieldem, který vytvoří hotové video">
+      <span>Vaše AI</span><span class="sipka" data-mobile="⇅" data-desktop="⇄" aria-hidden="true"></span><span>Higgsfield</span><span class="sipka" data-mobile="↓" data-desktop="→" aria-hidden="true"></span><span>Hotové video</span>
+    </div>
+  </header>
+  <section class="znalost karta mist" aria-labelledby="znalost-nadpis">
+    <div><h2 id="znalost-nadpis">Dejte svému AI pravidla pro Higgsfield</h2><p>Soubor hlídá zadání, výběr modelu a potvrzení ceny v kreditech před každým generováním.</p></div>
+    <a class="stahnout" href="higgsfield-znalost.md" download>Stáhnout znalostní soubor</a>
+  </section>
+  <main><section class="krok karta">
+<h2><span class="cislo-kroku">1</span><span>Založte si účet na Higgsfieldu</span></h2>
+<ol>
+<li>Otevřete <a href="https://higgsfield.ai">higgsfield.ai</a>.</li>
+<li>Přihlaste se přes Google, Apple, Microsoft nebo e-mail a heslo.</li>
+<li>Vyberte a aktivujte placené předplatné na <a href="https://higgsfield.ai/pricing">higgsfield.ai/pricing</a>.</li>
+<li>V nastavení plateb vypněte <strong>Auto-Refill</strong>, pokud nechcete automatické dokupování kreditů.</li>
+</ol>
+<p>Propojení s AI vyžaduje aktivní placené předplatné Higgsfield. Účet zdarma nestačí. Generování přes propojenou AI spotřebovává stejné kredity jako běžné generování na webu Higgsfield a nemá technický limit útraty.</p>
+</section>
+<section class="krok karta">
+<h2><span class="cislo-kroku">2</span><span>Propojte Higgsfield se svým AI</span></h2>
+<h3>a) Claude</h3>
+<ol>
+<li>Otevřete Claude ve webovém prohlížeči nebo v aplikaci Claude Desktop.</li>
+<li>Klikněte na <strong>Customize › Connectors › + › Add custom connector</strong>.</li>
+<li>Do názvu napište <code>Higgsfield</code>.</li>
+<li>Do adresy vložte <code>https://mcp.higgsfield.ai/mcp</code>.</li>
+<li>Klikněte na <strong>Add</strong> nebo <strong>Connect</strong>.</li>
+<li>V otevřeném okně se přihlaste ke svému účtu Higgsfield a přístup potvrďte. Claude zdarma dovolí jen jeden vlastní konektor.</li>
+<li>V novém chatu klikněte na <strong>+ › Connectors › Higgsfield</strong> a konektor pro tento chat zapněte.</li>
+</ol>
+<p>Pokud ve své verzi Claude vidíte místo <strong>Customize</strong> položku <strong>Settings</strong>, pokračujte přes <strong>Settings › Connectors</strong>.</p>
+<h3>b) ChatGPT</h3>
+<ol>
+<li>Otevřete v ChatGPT položku <strong>Plugins</strong> v postranním panelu.</li>
+<li>Vyhledejte <code>Higgsfield</code>.</li>
+<li>Otevřete kartu Higgsfield a klikněte na <strong>Install</strong> nebo <strong>Add</strong>, potom na <strong>Connect</strong>.</li>
+<li>V otevřeném okně se přihlaste ke svému účtu Higgsfield a přístup potvrďte.</li>
+<li>V novém chatu vyberte Higgsfield přes <strong>+ › Plugins</strong>, napište <code>@Higgsfield</code> nebo jej uveďte přímo v zadání.</li>
+</ol>
+<p>Když kartu Higgsfield v adresáři nevidíte, plugin není pro váš účet, oblast nebo pracovní prostor právě dostupný. U firemního účtu může být potřeba povolení správce.</p>
+</section>
+<section class="krok karta">
+<h2><span class="cislo-kroku">3</span><span>Vložte AI znalostní soubor do projektu</span></h2>
+<p>Nejdřív si z této stránky stáhněte soubor <strong>higgsfield-znalost.md</strong>.</p>
+<h3>a) Claude</h3>
+<ol>
+<li>Klikněte na <strong>Projects › + New Project</strong> a projekt pojmenujte.</li>
+<li>Na hlavní stránce projektu otevřete <strong>Project knowledge › +</strong>.</li>
+<li>Nahrajte soubor <code>higgsfield-znalost.md</code>.</li>
+<li>Otevřete nový chat uvnitř tohoto projektu a zapněte konektor Higgsfield přes <strong>+ › Connectors › Higgsfield</strong>.</li>
+</ol>
+<p>Pokud Claude soubor s příponou <code>.md</code> odmítne, otevřete jej v počítači a jeho obsah vložte do Project knowledge jako text.</p>
+<h3>b) ChatGPT</h3>
+<ol>
+<li>Klikněte v postranním panelu na <strong>New project</strong> a projekt pojmenujte.</li>
+<li>Otevřete <strong>Sources › Add files</strong>.</li>
+<li>Nahrajte soubor <code>higgsfield-znalost.md</code>.</li>
+<li>Otevřete nový chat uvnitř projektu a zapněte Higgsfield přes <strong>+ › Plugins</strong> nebo napište <code>@Higgsfield</code>.</li>
+</ol>
+<p>Pokud ChatGPT soubor s příponou <code>.md</code> odmítne, otevřete jej v počítači a jeho obsah vložte do Sources jako text.</p>
+</section>
+<section class="krok karta">
+<h2><span class="cislo-kroku">4</span><span>Přiložte fotky nebo videa a napište, co chcete</span></h2>
+<ol>
+<li>Do chatu napište: <code>Otevři nahrávací okno Higgsfieldu.</code></li>
+<li>V okně, které se objeví v konverzaci, vyberte fotografii nebo video ze svého zařízení.</li>
+<li>Napište, co má vzniknout: účel, síť, formát, délku, styl, pohyb a co se na původní fotografii nesmí změnit.</li>
+<li>Počkejte, až vám AI ukáže odhad ceny v kreditech. Generování spusťte až odpovědí <code>ano</code>.</li>
+</ol>
+<p>Obrázek přiložený běžnou sponkou do chatu konektor nemusí přečíst. Soubor proto vybírejte v nahrávacím okně Higgsfieldu. Obrázek z webu můžete předat přímým odkazem. Video v ChatGPT nahrajte vždy přes nahrávací okno Higgsfieldu.</p>
+<p><strong>Poznámka k lokální složce:</strong> Placený Claude Desktop s režimem Cowork může pracovat s výslovně připojenou složkou. Konkrétní soubor ale i tak nahrajte do Higgsfieldu přes jeho nahrávací okno.</p>
+</section>
+<section class="krok karta">
+<h2><span class="cislo-kroku">5</span><span>Hotové video si stáhněte</span></h2>
+<ol>
+<li>Výsledek se ukáže ve stejném chatu.</li>
+<li>Otevřete <a href="https://higgsfield.ai">higgsfield.ai</a> a přejděte do <strong>Assets</strong>.</li>
+<li>Pokud výsledek ještě nevidíte, počkejte přibližně minutu a stránku obnovte.</li>
+<li>Otevřete hotové video a klikněte na <strong>Download</strong>.</li>
+</ol>
+</section>
+<h2>První zadání ke zkopírování</h2>
+<div class="promptbox karta"><pre id="prvni-zadani"><code>Z fotografie mého produktu, kterou jsem nahrála do Higgsfieldu, vytvoř 5vteřinové video na Instagram ve formátu 9:16. Produkt ani jeho logo neměň. Použij pomalé přiblížení kamery a přirozené denní světlo. Nejdřív mi řekni odhad ceny v kreditech a čekej na moje „ano“.</code></pre><button type="button" data-copy="prvni-zadani">Zkopírovat</button><span class="kopie-stav" role="status" aria-live="polite"></span></div>
+<section class="doplnek karta">
+<h2>Když to nejde</h2>
+<div class="tabulka"><table><thead><tr><th>Co vidíte</th><th>Co udělat</th></tr></thead><tbody><tr><td data-label="Co vidíte">Higgsfield chce nové předplatné</td><td data-label="Co udělat">Ověřte na higgsfield.ai, že máte aktivní placené předplatné.</td></tr><tr><td data-label="Co vidíte">V ChatGPT není karta Higgsfield</td><td data-label="Co udělat">Zkontrolujte Plugins Directory. Dostupnost závisí na účtu, oblasti, pracovním prostoru a povolení správce.</td></tr><tr><td data-label="Co vidíte">Claude konektor v chatu nevidí</td><td data-label="Co udělat">Otevřete <strong>+ › Connectors</strong> a Higgsfield pro tento chat zapněte.</td></tr><tr><td data-label="Co vidíte">AI nevidí fotografii nebo video</td><td data-label="Co udělat">Napište <code>Otevři nahrávací okno Higgsfieldu</code> a vyberte soubor v něm.</td></tr><tr><td data-label="Co vidíte">Soubor <code>.md</code> nejde nahrát</td><td data-label="Co udělat">Otevřete jej a vložte jeho obsah do znalostí projektu jako text.</td></tr><tr><td data-label="Co vidíte">Hotové video není v Assets</td><td data-label="Co udělat">Počkejte přibližně minutu, obnovte stránku a zkontrolujte správný Higgsfield účet.</td></tr><tr><td data-label="Co vidíte">Ubývá více kreditů, než čekáte</td><td data-label="Co udělat">Zastavte další generování, zkontrolujte cenu každé úpravy a vypněte Auto-Refill.</td></tr></tbody></table></div>
+</section>
+<section class="doplnek karta">
+<h2>Jak propojení vypnout</h2>
+<p>Vraťte se na stejnou obrazovku, na které jste propojení zapnuli: v Claude do <strong>Customize nebo Settings › Connectors</strong>, v ChatGPT do <strong>Plugins</strong>. U položky Higgsfield zvolte odpojení nebo odebrání podle popisku, který váš účet nabízí. Tím zastavíte další použití Higgsfieldu z daného AI účtu; už vytvořené soubory zůstanou v <strong>Assets</strong> na higgsfield.ai.</p>
+</section></main>
+  <footer>Připravila Kristina Kumberová · <a href="mailto:kristina@kumberova.com">kristina@kumberova.com</a> · <a href="https://kumberova.com">kumberova.com</a><br>Ověřeno 23. 10. 2026, služby se mění</footer>
+</div>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (tlacitko) {
+  tlacitko.addEventListener('click', function () {
+    var cil = document.getElementById(tlacitko.getAttribute('data-copy'));
+    var stav = tlacitko.parentElement.querySelector('.kopie-stav');
+    var text = cil ? cil.innerText : '';
+    function hotovo() { stav.textContent = 'Zkopírováno. Teď zadání vložte do chatu.'; }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(hotovo).catch(function () { stav.textContent = 'Označte text a zkopírujte ho ručně.'; });
+    } else {
+      var pole = document.createElement('textarea'); pole.value = text; document.body.appendChild(pole); pole.select();
+      try { document.execCommand('copy'); hotovo(); } catch (e) { stav.textContent = 'Označte text a zkopírujte ho ručně.'; }
+      pole.remove();
+    }
+  });
+});
+</script>
+</body>
+</html>
